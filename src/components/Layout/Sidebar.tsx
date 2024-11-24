@@ -9,7 +9,7 @@ import {
 const menuItems = [
   { icon: LayoutGrid, label: 'Dashboard', path: '/' },
   { icon: MessageCircle, label: 'Messages', path: '/messages', implemented: true },
-  { icon: Calendar, label: 'Calendar', path: '/calendar', implemented: false },
+  { icon: Calendar, label: 'Calendar', path: '/calendar', implemented: true },
   { icon: Users, label: 'Contacts', path: '/contacts', implemented: false },
   { icon: Building2, label: 'Companies', path: '/companies', implemented: true },
   { icon: Users2, label: 'Communities', path: '/communities', implemented: false },

@@ -1,16 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignIn from './components/Auth/SignIn';
 import SignUp from './components/Auth/SignUp';
 import ForgotPassword from './components/Auth/ForgotPassword';
 import DashboardMain from './components/Dashboard/DashboardMain';
-import DashboardAssigned from './components/Dashboard/DashboardAssigned';
-import DashboardProjects from './components/Dashboard/DashboardProjects';
 import CompanyList from './components/Companies/CompanyList';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
 import Layout from './components/Layout';
 import { MessagesPage } from './components/Messages/MessagesPage';
+import { CalendarPage } from './components/Calendar';
+
 function App() {
   return (
     <AuthProvider>
@@ -21,6 +20,7 @@ function App() {
               <Route index element={<DashboardMain />} />
               <Route path="companies" element={<CompanyList />} />
               <Route path="messages" element={<MessagesPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
             </Route>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
@@ -31,4 +31,5 @@ function App() {
     </AuthProvider>
   );
 }
+
 export default App;
