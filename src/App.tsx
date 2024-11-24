@@ -9,6 +9,7 @@ import { DataProvider } from './contexts/DataContext';
 import Layout from './components/Layout';
 import { MessagesPage } from './components/Messages/MessagesPage';
 import { CalendarPage } from './components/Calendar';
+import { ContactsPage } from './components/Contacts/ContactsPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="companies" element={<CompanyList />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="calendar" element={<CalendarPage />} />
+              <Route path="contacts" element={<ContactsPage />} />
             </Route>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
@@ -31,5 +33,4 @@ function App() {
     </AuthProvider>
   );
 }
-
 export default App;
