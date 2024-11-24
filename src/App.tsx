@@ -5,6 +5,7 @@ import ForgotPassword from './components/Auth/ForgotPassword';
 import DashboardMain from './components/Dashboard/DashboardMain';
 import DashboardAssigned from './components/Dashboard/DashboardAssigned';
 import DashboardProjects from './components/Dashboard/DashboardProjects';
+import CompanyList from './components/Companies/CompanyList';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
@@ -30,6 +31,7 @@ function App() {
               <Route index element={<DashboardMain />} />
               <Route path="assigned" element={<DashboardAssigned />} />
               <Route path="projects" element={<DashboardProjects />} />
+              <Route path="companies" element={<CompanyList />} />
             </Route>
           </Routes>
         </Router>
