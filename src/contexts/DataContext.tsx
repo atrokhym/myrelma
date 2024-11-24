@@ -48,6 +48,15 @@ interface Industry {
   userId: string;
 }
 
+interface Message {
+  id: string;
+  sender: string;
+  content: string;
+  timestamp: Date;
+  isRead: boolean;
+  userId: string;
+}
+
 interface DataContextType {
   companies: Company[];
   tasks: Task[];
@@ -62,6 +71,10 @@ interface DataContextType {
   updateIndustry: (id: string, industry: Partial<Industry>) => Promise<void>;
   deleteIndustry: (id: string) => Promise<void>;
   loading: boolean;
+  messages: Message[];
+  addMessage: (message: Omit<Message, 'id' | 'userId'>) => Promise<void>;
+  updateMessage: (id: string, message: Partial<Message>) => Promise<void>;
+  deleteMessage: (id: string) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -71,6 +84,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [industries, setIndustries] = useState<Industry[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,6 +92,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setCompanies([]);
       setTasks([]);
       setIndustries([]);
+      setMessages([]);
       setLoading(false);
       return;
     }
@@ -115,12 +130,24 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
+    const unsubscribeMessages = onSnapshot(
+      query(collection(db, 'messages'), where('userId', '==', user.uid)),
+      (snapshot) => {
+        const messagesData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as Message));
+        setMessages(messagesData);
+      }
+    );
+
     setLoading(false);
 
     return () => {
       unsubscribeCompanies();
       unsubscribeTasks();
       unsubscribeIndustries();
+      unsubscribeMessages();
     };
   }, [user]);
 
@@ -177,6 +204,24 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     await deleteDoc(doc(db, 'industries', id));
   };
 
+  const addMessage = async (message: Omit<Message, 'id' | 'userId'>) => {
+    if (!user) return;
+    await addDoc(collection(db, 'messages'), {
+      ...message,
+      userId: user.uid,
+      timestamp: Timestamp.now()
+    });
+  };
+
+  const updateMessage = async (id: string, message: Partial<Message>) => {
+    const docRef = doc(db, 'messages', id);
+    await updateDoc(docRef, message);
+  };
+
+  const deleteMessage = async (id: string) => {
+    await deleteDoc(doc(db, 'messages', id));
+  };
+
   const value = {
     companies,
     tasks,
@@ -190,7 +235,11 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     addIndustry,
     updateIndustry,
     deleteIndustry,
-    loading
+    loading,
+    messages,
+    addMessage,
+    updateMessage,
+    deleteMessage
   };
 
   if (loading) {
@@ -199,7 +248,6 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 }
-
 export function useData() {
   const context = useContext(DataContext);
   if (context === undefined) {

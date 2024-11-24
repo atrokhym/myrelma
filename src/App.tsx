@@ -10,34 +10,25 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { DataProvider } from './contexts/DataContext';
 import Layout from './components/Layout';
-
+import { MessagesPage } from './components/Messages/MessagesPage';
 function App() {
   return (
     <AuthProvider>
       <DataProvider>
         <Router>
           <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<DashboardMain />} />
+              <Route path="companies" element={<CompanyList />} />
+              <Route path="messages" element={<MessagesPage />} />
+            </Route>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<DashboardMain />} />
-              <Route path="assigned" element={<DashboardAssigned />} />
-              <Route path="projects" element={<DashboardProjects />} />
-              <Route path="companies" element={<CompanyList />} />
-            </Route>
           </Routes>
         </Router>
       </DataProvider>
     </AuthProvider>
   );
 }
-
 export default App;
