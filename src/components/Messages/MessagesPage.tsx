@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useData } from '../../contexts/DataContext';
 import { MessageDetail } from './MessageDetail';
 import { MessagePreview } from './MessagePreview';
@@ -14,8 +14,41 @@ interface Message {
 }
 
 export const MessagesPage = () => {
-  const { messages } = useData();
+  const { messages, addMessage } = useData();
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+
+  const generateTestMessages = async () => {
+    if (messages.length === 0) {
+      const testMessages = [
+        {
+          sender: "John Smith",
+          content: "Hi, I'd like to discuss the project proposal.",
+          timestamp: new Date(),
+          isRead: false
+        },
+        {
+          sender: "Sarah Johnson",
+          content: "Thanks for your recent application. We'd love to schedule an interview.",
+          timestamp: new Date(),
+          isRead: true
+        },
+        {
+          sender: "Mike Wilson",
+          content: "Following up on our meeting last week. Here are the next steps.",
+          timestamp: new Date(),
+          isRead: false
+        }
+      ];
+
+      for (const msg of testMessages) {
+        await addMessage(msg);
+      }
+    }
+  };
+
+  useEffect(() => {
+    generateTestMessages();
+  }, []);
   
   return (
     <MessagesLayout>
